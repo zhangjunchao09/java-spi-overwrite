@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="example" />
+        <module name="interface" />
+        <module name="interface-impl" />
+        <module name="interface-impl (1)" />
+        <module name="interface-impl2" />
+        <module name="spioverwrite" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="11">
+      <module name="example" target="1.8" />
+      <module name="interface" target="1.8" />
+      <module name="interface-impl" target="1.8" />
+      <module name="interface-impl (1)" target="1.8" />
+      <module name="interface-impl2" target="1.8" />
+      <module name="interfaceimpl" target="1.8" />
+      <module name="java-spi-overwrite" target="1.8" />
+      <module name="spi-overwrite-example" target="1.8" />
+      <module name="spioverwrite" target="1.8" />
+      <module name="spioverwriteexample" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
