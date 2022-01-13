@@ -13,11 +13,7 @@
     <artifactId>spi-overwrite</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>5.3.13</version>
-        </dependency>
+
     </dependencies>
 
 
