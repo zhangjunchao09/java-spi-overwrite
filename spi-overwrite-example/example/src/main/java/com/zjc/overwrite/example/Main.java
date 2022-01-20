@@ -6,7 +6,7 @@ import com.zjc.overwrite.servicesLoad.ServicesLoadFromClassFile;
 public class Main {
     public static void main(String[] args) {
         ServicesLoadFromClassFile servicesLoadFromResources = new ServicesLoadFromClassFile(encrypt.class);
-        Class<?> clMd5 = servicesLoadFromResources.loadClass("com.zjc.overwrite.example.services.Md5Encrypt2");
+        Class<?> clMd5 = servicesLoadFromResources.getClass("com.zjc.overwrite.example.services.Md5Encrypt3");
         try {
             encrypt p = encrypt.class.cast(clMd5.newInstance());
             p.deCode("deCode");
@@ -16,7 +16,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Class<?> clSha = servicesLoadFromResources.loadClass("com.zjc.overwrite.example.services.Md5Encrypt");
+/*        Class<?> clSha = servicesLoadFromResources.loadClass("com.zjc.overwrite.example.services.Md5Encrypt");
         try {
             encrypt p = encrypt.class.cast(clSha.newInstance());
             p.deCode("deCode");
@@ -24,6 +24,6 @@ public class Main {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

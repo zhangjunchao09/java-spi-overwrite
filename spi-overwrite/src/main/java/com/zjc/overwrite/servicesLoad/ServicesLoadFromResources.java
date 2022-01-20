@@ -26,11 +26,10 @@ public final class ServicesLoadFromResources<S> extends ClassLoader {
         service = Objects.requireNonNull(svc, "Service interface cannot be null");
     }
 
-    @Override
-    public Class<?> loadClass(String name) {
+    public Class<?> getClass(String name) {
         if (classMap == null) {
             try {
-                loadClass();
+                initClassMap();
             } catch (IOException e) {
                 return null;
             }
@@ -38,7 +37,7 @@ public final class ServicesLoadFromResources<S> extends ClassLoader {
         return classMap.get(name);
     }
 
-    public void loadClass() throws IOException {
+    public void initClassMap() throws IOException {
         String fullName = path + service.getName();
         ArrayList<String> names = new ArrayList<>();
         Enumeration<URL> configs = Thread.currentThread().getContextClassLoader().getSystemResources(fullName);
