@@ -1,4 +1,4 @@
-package com.zjc.overwrite.servicesLoad;
+package com.zjc.overwrite.servicesload;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,10 +26,11 @@ public final class ServicesLoadFromResources<S> extends ClassLoader {
         service = Objects.requireNonNull(svc, "Service interface cannot be null");
     }
 
-    public Class<?> getClass(String name) {
+    @Override
+    public Class<?> loadClass(String name) {
         if (classMap == null) {
             try {
-                initClassMap();
+                loadClass();
             } catch (IOException e) {
                 return null;
             }
@@ -37,7 +38,7 @@ public final class ServicesLoadFromResources<S> extends ClassLoader {
         return classMap.get(name);
     }
 
-    public void initClassMap() throws IOException {
+    public void loadClass() throws IOException {
         String fullName = path + service.getName();
         ArrayList<String> names = new ArrayList<>();
         Enumeration<URL> configs = Thread.currentThread().getContextClassLoader().getSystemResources(fullName);

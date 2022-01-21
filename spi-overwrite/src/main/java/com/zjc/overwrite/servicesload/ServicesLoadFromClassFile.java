@@ -1,7 +1,9 @@
-package com.zjc.overwrite.servicesLoad;
+package com.zjc.overwrite.servicesload;
 
+import com.zjc.overwrite.parseclass.Handle.ClassInfoHandle;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,8 +19,9 @@ public final class ServicesLoadFromClassFile<S> extends ClassLoader {
     private Map<String, Class<?>> classMap = null;
 
 
-    public ServicesLoadFromClassFile(Class<S> svc) {
+    public ServicesLoadFromClassFile(Class<S> svc, String path) {
         service = Objects.requireNonNull(svc, "Service interface cannot be null");
+        this.path = path == null ? this.path : path;
     }
 
     public Class<?> getClass(String name) {
@@ -41,18 +44,22 @@ public final class ServicesLoadFromClassFile<S> extends ClassLoader {
             File[] files = file.listFiles();
             for (File f : files) {
                 if (!f.isDirectory()) {
-                    String name = f.getName();
-                    name = name.substring(0, name.indexOf("."));
-                    String fullName = "com.zjc.overwrite.example.services." + name;
+                    String fullName;
+                    try (FileInputStream fis = new FileInputStream(f)) {
+                        ClassInfoHandle classInfoHandle = new ClassInfoHandle();
+                        classInfoHandle.read(fis);
+                        String classPath = classInfoHandle.getClassInfo().getThisClass();
+                        fullName = classPath.replaceAll("/", ".");
+                    }
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    try (DataInputStream bi = new DataInputStream(new FileInputStream(f))) {
+                    try (BufferedInputStream bi = new BufferedInputStream(new FileInputStream(f))) {
                         byte[] buf = new byte[4096];
                         for (int bytesRead = bi.read(buf); bytesRead >= 0; bytesRead = bi.read(buf)) {
                             buffer.write(buf, 0, bytesRead);
                         }
                     }
                     byte[] classData = buffer.toByteArray();
-                    Class<?> cl = defineClass(name, classData, 0, classData.length);
+                    Class<?> cl = defineClass(fullName, classData, 0, classData.length);
                     if (service.isAssignableFrom(cl)) {
                         classMap.put(fullName, cl);
                     }
