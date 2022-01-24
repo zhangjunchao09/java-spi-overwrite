@@ -35,6 +35,8 @@ public class ClassInfoHandle implements Handle {
 
     public ClassInfoHandle() {
         classInfo = new ClassInfo();
+        //step7 读取接口
+        handles.add(new InterfaceHandle(classInfo));
         //step8 读取字段表集合
         handles.add(new Field(classInfo));
         //step9 读取方法表
@@ -61,9 +63,6 @@ public class ClassInfoHandle implements Handle {
 
         //step6 读取父类
         readSuperClass(is);
-
-        //step7 读取接口
-        readInterfaces(is);
 
         handles.forEach(h -> {
             h.read(is);
@@ -131,7 +130,7 @@ public class ClassInfoHandle implements Handle {
                         constantBase = new ConstantsClassInfo(classInfo);
                         break;
                     case 8:
-                        constantBase = new ConstantsStringInfo();
+                        constantBase = new ConstantsStringInfo(classInfo);
                         break;
                     case 9:
                         constantBase = new ConstantsFieldrefInfo(classInfo);

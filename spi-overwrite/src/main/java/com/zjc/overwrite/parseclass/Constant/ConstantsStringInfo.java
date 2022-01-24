@@ -1,5 +1,6 @@
 package com.zjc.overwrite.parseclass.Constant;
 
+import com.zjc.overwrite.parseclass.ClassInfo;
 import com.zjc.overwrite.utils.ByteUtils;
 
 import java.io.IOException;
@@ -8,8 +9,9 @@ import java.io.InputStream;
 public class ConstantsStringInfo extends ConstantBase {
     public byte[] bytes = new byte[2];
 
-    public ConstantsStringInfo() {
+    public ConstantsStringInfo(ClassInfo classInfo) {
         description = "CONSTANT_String_info";
+        this.classInfo = classInfo;
     }
 
     @Override
@@ -34,10 +36,9 @@ public class ConstantsStringInfo extends ConstantBase {
     }
 
     public String getStringValue() {
-        /*int index = (bytes[0] << 8) + bytes[1];
-        ConstantBase constantBase = constantList.get(index - 1);
+        int index = (bytes[0] << 8) + bytes[1];
+        ConstantBase constantBase = classInfo.getConstantList().get(index - 1);
         ConstantsUtf8Info constantsUtf8Info = (ConstantsUtf8Info) constantBase;
-        return constantsUtf8Info.getValue();*/
-        return "";
+        return constantsUtf8Info.getValue();
     }
 }
