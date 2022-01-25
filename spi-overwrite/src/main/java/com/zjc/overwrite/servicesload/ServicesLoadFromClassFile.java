@@ -51,18 +51,19 @@ public final class ServicesLoadFromClassFile<S> extends ClassLoader {
                         String classPath = classInfoHandle.getClassInfo().getThisClass();
                         fullName = classPath.replaceAll("/", ".");
                     }
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    try (BufferedInputStream bi = new BufferedInputStream(new FileInputStream(f))) {
+                    try (ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                         BufferedInputStream bi = new BufferedInputStream(new FileInputStream(f))) {
                         byte[] buf = new byte[4096];
                         for (int bytesRead = bi.read(buf); bytesRead >= 0; bytesRead = bi.read(buf)) {
                             buffer.write(buf, 0, bytesRead);
                         }
+                        byte[] classData = buffer.toByteArray();
+                        Class<?> cl = defineClass(fullName, classData, 0, classData.length);
+                        if (service.isAssignableFrom(cl)) {
+                            classMap.put(fullName, cl);
+                        }
                     }
-                    byte[] classData = buffer.toByteArray();
-                    Class<?> cl = defineClass(fullName, classData, 0, classData.length);
-                    if (service.isAssignableFrom(cl)) {
-                        classMap.put(fullName, cl);
-                    }
+
                 }
 
             }
