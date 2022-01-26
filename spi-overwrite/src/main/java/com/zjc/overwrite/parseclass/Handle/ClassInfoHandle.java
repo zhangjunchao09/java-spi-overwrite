@@ -53,7 +53,9 @@ public class ClassInfoHandle implements Handle {
         readVersion(is);
 
         //step3 读取常量池
-        readConstantPool(is);
+        ConstantHandle constantHandle = new ConstantHandle(classInfo);
+        constantHandle.read(is);
+        constantHandle.print();
 
         //step4 读取访问标识
         readAccessFlag(is);
@@ -93,74 +95,6 @@ public class ClassInfoHandle implements Handle {
 
         try {
             is.read(classInfo.getMajorVersionBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void readConstantPool(InputStream is) {
-        byte[] bytes = new byte[2];
-        try {
-            is.read(bytes);
-
-            int constantNum = (bytes[0] << 8) + bytes[1] - 1;
-
-            for (int i = 0; i < constantNum; i++) {
-                //每次读取一个字节
-                ConstantBase constantBase;
-                System.out.println("第" + (i + 1) + "个常量：");
-                int tag = is.read();
-                switch (tag) {
-                    case 1:
-                        constantBase = new ConstantsUtf8Info();
-                        break;
-                    case 3:
-                        constantBase = new ConstantsIntegerInfo();
-                        break;
-                    case 4:
-                        constantBase = new ConstantsFloatInfo();
-                        break;
-                    case 5:
-                        constantBase = new ConstantsLongInfo();
-                        break;
-                    case 6:
-                        constantBase = new ConstantsDoubleInfo();
-                        break;
-                    case 7:
-                        constantBase = new ConstantsClassInfo(classInfo);
-                        break;
-                    case 8:
-                        constantBase = new ConstantsStringInfo(classInfo);
-                        break;
-                    case 9:
-                        constantBase = new ConstantsFieldrefInfo(classInfo);
-                        break;
-                    case 10:
-                        constantBase = new ConstantsMethodrefInfo();
-                        break;
-                    case 11:
-                        constantBase = new ConstantsInterfaceMethodrefInfo();
-                        break;
-                    case 12:
-                        constantBase = new ConstantsNameAndTypeInfo(classInfo);
-                        break;
-                    case 15:
-                        constantBase = new ConstantMethodHandleInfo();
-                        break;
-                    case 16:
-                        constantBase = new ConstantMethodTypeInfo();
-                        break;
-                    case 18:
-                        constantBase = new ConstantInvokeDynamicInfo();
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + tag);
-                }
-
-                constantBase.read(is);
-                classInfo.getConstantList().add(constantBase);
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
